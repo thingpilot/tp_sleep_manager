@@ -138,6 +138,7 @@ void TP_Sleep_Manager::rtc_set_wake_up_timer_s(uint32_t delta)
         clock = RTC_WAKEUPCLOCK_CK_SPRE_17BITS;
     }
     
+    static RTC_HandleTypeDef RtcHandle;
     RtcHandle.Instance = RTC;
 
     HAL_StatusTypeDef status = HAL_RTCEx_SetWakeUpTimer_IT(&RtcHandle, delta, clock);

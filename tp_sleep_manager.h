@@ -58,10 +58,6 @@ class TP_Sleep_Manager
 
     private:
 
-        /** Static member for interaction with RTC HAL API
-         */
-        static RTC_HandleTypeDef RtcHandle;
-
         /** Initialise hardware RTC inside a mutex so that this
          *  operation can't be interrupted. This, OR set_time, needs to be 
          *  done prior to attempting to enter Standby mode else 
