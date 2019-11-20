@@ -9,3 +9,15 @@
 /** Includes 
  */
 #include "tp_sleep_manager.h"
+
+
+TP_Sleep_Manager::TP_Sleep_Manager()
+{
+
+}
+
+
+TP_Sleep_Manager::~TP_Sleep_Manager()
+{
+    
+}

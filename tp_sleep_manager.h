@@ -13,3 +13,18 @@
 /** Includes 
  */
 #include <mbed.h>
+
+
+/** Base class for the sleep manager
+ */
+class TP_Sleep_Manager 
+{
+    public:
+
+        TP_Sleep_Manager();
+
+        ~TP_Sleep_Manager();
+
+    private:
+
+};
