@@ -14,7 +14,7 @@
  */
 TP_Sleep_Manager::TP_Sleep_Manager()
 {
-
+    init_rtc();
 }
 
 /** Destructor for the Thingpilot sleep manager
