@@ -100,26 +100,26 @@ TP_Sleep_Manager::WakeupType_t TP_Sleep_Manager::get_wakeup_type()
 {
     if(__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST)) 
     {
-       return WAKEUP_RESET;
+       return TP_Sleep_Manager::WakeupType_t::WAKEUP_RESET;
     }
     if(READ_BIT(RTC->ISR, RTC_ISR_WUTF)) 
     {
-        return WAKEUP_TIMER;
+        return TP_Sleep_Manager::WakeupType_t::WAKEUP_TIMER;
     }
     if(READ_BIT(PWR->CSR, PWR_CSR_WUF)) 
     {
-        return WAKEUP_PIN;
+        return TP_Sleep_Manager::WakeupType_t::WAKEUP_PIN;
     }
     if(__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST)) 
     {
-        return WAKEUP_SOFTWARE;
+        return TP_Sleep_Manager::WakeupType_t::WAKEUP_SOFTWARE;
     }
     if(__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST)) 
     {
-        return WAKEUP_LOWPOWER;
+        return TP_Sleep_Manager::WakeupType_t::WAKEUP_LOWPOWER;
     }
 
-    return WAKEUP_UNKNOWN;
+    return TP_Sleep_Manager::WakeupType_t::WAKEUP_UNKNOWN;
 }
 
 /** Set wakeup timer to wake the device in delta seconds
