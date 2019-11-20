@@ -21,8 +21,12 @@ class TP_Sleep_Manager
 {
     public:
 
+        /** Constructor for the Thingpilot sleep manager
+         */
         TP_Sleep_Manager();
 
+        /** Destructor for the Thingpilot sleep manager
+         */
         ~TP_Sleep_Manager();
 
     private:
