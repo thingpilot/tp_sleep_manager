@@ -54,7 +54,7 @@ class TP_Sleep_Manager
          *                in Standby mode
          * @param wkup_one Optionally enable interrupts on WAKEUP_PIN1 if set true
          */
-        void standby(int seconds, bool wkup_one) 
+        void standby(int seconds, bool wkup_one); 
 
     private:
 
