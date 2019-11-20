@@ -111,3 +111,27 @@ TP_Sleep_Manager::WakeupType_t TP_Sleep_Manager::get_wakeup_type()
 
     return WAKEUP_UNKNOWN;
 }
+
+/** Set wakeup timer to wake the device in delta seconds
+         * 
+         * @param seconds Total number of seconds for until the RTC
+         *                timer should generate an alarm
+         */
+void TP_Sleep_Manager::rtc_set_wake_up_timer_s(uint32_t delta) 
+{
+    uint32_t clock = RTC_WAKEUPCLOCK_CK_SPRE_16BITS;
+
+    // HAL_RTCEx_SetWakeUpTimer_IT will assert that delta is 0xFFFF at max
+    if (delta > 0xFFFF) 
+    {
+        delta -= 0x10000;
+        clock = RTC_WAKEUPCLOCK_CK_SPRE_17BITS;
+    }
+    
+    RtcHandle.Instance = RTC;
+    
+    HAL_StatusTypeDef status = HAL_RTCEx_SetWakeUpTimer_IT(&RtcHandle, delta, clock);
+    if (status != HAL_OK) {
+        NVIC_SystemReset();
+    }
+}

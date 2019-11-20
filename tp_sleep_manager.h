@@ -33,6 +33,10 @@ class TP_Sleep_Manager
             WAKEUP_UNKNOWN  = 5
         };
 
+        /** Static member for interaction with RTC HAL API
+         */
+        static RTC_HandleTypeDef RtcHandle;
+
         /** Constructor for the Thingpilot sleep manager
          */
         TP_Sleep_Manager();
@@ -59,6 +63,13 @@ class TP_Sleep_Manager
          * @returns WakeupType_t type corresponding to the determined wakeup source
          */
         WakeupType_t get_wakeup_type();
+
+        /** Set wakeup timer to wake the device in delta seconds
+         * 
+         * @param seconds Total number of seconds for until the RTC
+         *                timer should generate an alarm
+         */
+        void rtc_set_wake_up_timer_s(uint32_t seconds);
 
     private:
 
