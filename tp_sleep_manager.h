@@ -58,6 +58,12 @@ class TP_Sleep_Manager
          */
         void lp_configure_system();
 
+        /** Reset the wakeup type flags. This must be done before the device
+         *  enters any form of sleep mode to ensure that we can accurately determine
+         *  what wakes the device up
+         */
+        void clear_uc_wakeup_flags(); 
+
         /** Determine why exactly the device woke up
          * 
          * @returns WakeupType_t type corresponding to the determined wakeup source
@@ -70,6 +76,15 @@ class TP_Sleep_Manager
          *                timer should generate an alarm
          */
         void rtc_set_wake_up_timer_s(uint32_t seconds);
+
+        /** Enter standby mode for seconds many seconds and optionally enable
+         *  WAKEUP_PIN1 to allow the device to respond to interrupts on this pin
+         * 
+         * @param seconds Amount of seconds for which the device should stay
+         *                in Standby mode
+         * @param wkup_one Optionally enable interrupts on WAKEUP_PIN1 if set true
+         */
+        void standby(int seconds, bool wkup_one) 
 
     private:
 

@@ -82,6 +82,16 @@ void TP_Sleep_Manager::lp_configure_system()
     __HAL_RCC_GPIOE_CLK_DISABLE();
 }
 
+/** Reset the wakeup type flags. This must be done before the device
+ *  enters any form of sleep mode to ensure that we can accurately determine
+ *  what wakes the device up
+ */
+void TP_Sleep_Interface::clear_uc_wakeup_flags() 
+{
+    __HAL_RCC_CLEAR_RESET_FLAGS();
+    SET_BIT(PWR->CR, PWR_CR_CWUF);
+}
+
 /** Determine why exactly the device woke up
  * 
  * @returns WakeupType_t type corresponding to the determined wakeup source
@@ -129,9 +139,40 @@ void TP_Sleep_Manager::rtc_set_wake_up_timer_s(uint32_t delta)
     }
     
     RtcHandle.Instance = RTC;
-    
+
     HAL_StatusTypeDef status = HAL_RTCEx_SetWakeUpTimer_IT(&RtcHandle, delta, clock);
     if (status != HAL_OK) {
         NVIC_SystemReset();
     }
+}
+
+/** Enter standby mode for seconds many seconds and optionally enable
+ *  WAKEUP_PIN1 to allow the device to respond to interrupts on this pin
+ * 
+ * @param seconds Amount of seconds for which the device should stay
+ *                in Standby mode
+ * @param wkup_one Optionally enable interrupts on WAKEUP_PIN1 if set true
+ */
+void standby(int seconds, bool wkup_one) 
+{
+    SystemPower_Config();
+    core_util_critical_section_enter();
+    clear_uc_wakeup_flags();
+
+    rtc_set_wake_up_timer_s(seconds);
+
+    if(wkup_one) {
+        HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
+    }
+    else {
+        HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN1);
+    }
+
+    HAL_PWR_EnterSTANDBYMode();
+
+    // this should not happen...
+    core_util_critical_section_exit();
+
+    // something went wrong, let's reset
+    NVIC_SystemReset();
 }
