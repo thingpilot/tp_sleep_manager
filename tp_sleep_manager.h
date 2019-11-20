@@ -13,7 +13,7 @@
 /** Includes 
  */
 #include <mbed.h>
-
+#include "rtc_api_hal.h"
 
 /** Base class for the sleep manager
  */
