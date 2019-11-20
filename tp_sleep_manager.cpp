@@ -153,7 +153,7 @@ void TP_Sleep_Manager::rtc_set_wake_up_timer_s(uint32_t delta)
  *                in Standby mode
  * @param wkup_one Optionally enable interrupts on WAKEUP_PIN1 if set true
  */
-void standby(int seconds, bool wkup_one) 
+void TP_Sleep_Manager::standby(int seconds, bool wkup_one) 
 {
     lp_configure_system();
     core_util_critical_section_enter();
