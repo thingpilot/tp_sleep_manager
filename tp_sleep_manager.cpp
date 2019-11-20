@@ -86,7 +86,7 @@ void TP_Sleep_Manager::lp_configure_system()
  *  enters any form of sleep mode to ensure that we can accurately determine
  *  what wakes the device up
  */
-void TP_Sleep_Interface::clear_uc_wakeup_flags() 
+void TP_Sleep_Manager::clear_uc_wakeup_flags() 
 {
     __HAL_RCC_CLEAR_RESET_FLAGS();
     SET_BIT(PWR->CR, PWR_CR_CWUF);
