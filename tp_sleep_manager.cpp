@@ -81,3 +81,33 @@ void TP_Sleep_Manager::lp_configure_system()
     __HAL_RCC_GPIOH_CLK_DISABLE();
     __HAL_RCC_GPIOE_CLK_DISABLE();
 }
+
+/** Determine why exactly the device woke up
+ * 
+ * @returns WakeupType_t type corresponding to the determined wakeup source
+ */
+TP_Sleep_Manager::WakeupType_t TP_Sleep_Manager::get_wakeup_type()
+{
+    if(__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST)) 
+    {
+       return WAKEUP_RESET;
+    }
+    if(READ_BIT(RTC->ISR, RTC_ISR_WUTF)) 
+    {
+        return WAKEUP_TIMER;
+    }
+    if(READ_BIT(PWR->CSR, PWR_CSR_WUF)) 
+    {
+        return WAKEUP_PIN;
+    }
+    if(__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST)) 
+    {
+        return WAKEUP_SOFTWARE;
+    }
+    if(__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST)) 
+    {
+        return WAKEUP_LOWPOWER;
+    }
+
+    return WAKEUP_UNKNOWN;
+}

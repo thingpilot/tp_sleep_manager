@@ -21,6 +21,18 @@ class TP_Sleep_Manager
 {
     public:
 
+        /** Enumerated list of possible wakeup trigger sources
+         */
+        enum class WakeupType_t
+        {
+            WAKEUP_RESET    = 0,
+            WAKEUP_TIMER    = 1,
+            WAKEUP_PIN      = 2,
+            WAKEUP_SOFTWARE = 3,
+            WAKEUP_LOWPOWER = 4,
+            WAKEUP_UNKNOWN  = 5
+        };
+
         /** Constructor for the Thingpilot sleep manager
          */
         TP_Sleep_Manager();
@@ -41,6 +53,12 @@ class TP_Sleep_Manager
          *  On wakeup use the MSI clock
          */
         void lp_configure_system();
+
+        /** Determine why exactly the device woke up
+         * 
+         * @returns WakeupType_t type corresponding to the determined wakeup source
+         */
+        WakeupType_t get_wakeup_type();
 
     private:
 
