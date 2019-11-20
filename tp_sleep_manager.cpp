@@ -9,3 +9,17 @@
 /** Includes 
  */
 #include "tp_sleep_manager.h"
+
+/** Constructor for the Thingpilot sleep manager
+ */
+TP_Sleep_Manager::TP_Sleep_Manager()
+{
+
+}
+
+/** Destructor for the Thingpilot sleep manager
+ */
+TP_Sleep_Manager::~TP_Sleep_Manager()
+{
+    
+}
