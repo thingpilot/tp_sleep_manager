@@ -155,7 +155,7 @@ void TP_Sleep_Manager::rtc_set_wake_up_timer_s(uint32_t delta)
  */
 void standby(int seconds, bool wkup_one) 
 {
-    SystemPower_Config();
+    lp_configure_system();
     core_util_critical_section_enter();
     clear_uc_wakeup_flags();
 

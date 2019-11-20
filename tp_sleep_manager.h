@@ -33,10 +33,6 @@ class TP_Sleep_Manager
             WAKEUP_UNKNOWN  = 5
         };
 
-        /** Static member for interaction with RTC HAL API
-         */
-        static RTC_HandleTypeDef RtcHandle;
-
         /** Constructor for the Thingpilot sleep manager
          */
         TP_Sleep_Manager();
@@ -52,30 +48,11 @@ class TP_Sleep_Manager
          */
         void init_rtc();
 
-        /** Configure all GPIO pins to Hi-Z to minimise leakage current,
-         *  place Vcore into low power mode and enable fast wake up mode.
-         *  On wakeup use the MSI clock
-         */
-        void lp_configure_system();
-
-        /** Reset the wakeup type flags. This must be done before the device
-         *  enters any form of sleep mode to ensure that we can accurately determine
-         *  what wakes the device up
-         */
-        void clear_uc_wakeup_flags(); 
-
         /** Determine why exactly the device woke up
          * 
          * @returns WakeupType_t type corresponding to the determined wakeup source
          */
         WakeupType_t get_wakeup_type();
-
-        /** Set wakeup timer to wake the device in delta seconds
-         * 
-         * @param seconds Total number of seconds for until the RTC
-         *                timer should generate an alarm
-         */
-        void rtc_set_wake_up_timer_s(uint32_t seconds);
 
         /** Enter standby mode for seconds many seconds and optionally enable
          *  WAKEUP_PIN1 to allow the device to respond to interrupts on this pin
@@ -88,4 +65,26 @@ class TP_Sleep_Manager
 
     private:
 
+        /** Static member for interaction with RTC HAL API
+         */
+        static RTC_HandleTypeDef RtcHandle;
+
+        /** Configure all GPIO pins to Hi-Z to minimise leakage current,
+         *  place Vcore into low power mode and enable fast wake up mode.
+         *  On wakeup use the MSI clock
+         */
+        void lp_configure_system();
+
+        /** Reset the wakeup type flags. This must be done before the device
+         *  enters any form of sleep mode to ensure that we can accurately determine
+         *  what wakes the device up
+         */
+        void clear_uc_wakeup_flags(); 
+
+         /** Set wakeup timer to wake the device in delta seconds
+         * 
+         * @param seconds Total number of seconds for until the RTC
+         *                timer should generate an alarm
+         */
+        void rtc_set_wake_up_timer_s(uint32_t seconds);
 };
