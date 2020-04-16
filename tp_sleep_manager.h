@@ -1,7 +1,7 @@
 /**
   * @file    tp_sleep_manager.h
-  * @version 0.1.0
-  * @author  Adam Mitchell
+  * @version 0.2.0
+  * @author  Adam Mitchell, Rafaella Neofytou
   * @brief   Header file of the Thingpilot sleep manager. This will determine when a Thingpilot
   *          device can go to sleep and handle all of the low-level configuration to achieve this
   */
@@ -54,8 +54,16 @@ class TP_Sleep_Manager
          *                in Standby mode
          * @param wkup_one Optionally enable interrupts on WAKEUP_PIN1 if set true
          */
-        void standby(int seconds, bool wkup_one); 
+        void standby(int seconds, bool wkup_one);
 
+        /** Enter stopmode mode for seconds many seconds and optionally enable
+         *  WAKEUP_PIN1 to allow the device to respond to interrupts on this pin
+         * 
+         * @param seconds Amount of seconds for which the device should stay
+         *                in Standby mode
+         * @param wkup_one Optionally enable interrupts on WAKEUP_PIN1 if set true
+         */ 
+        void stop(int seconds, bool wkup_one);
     private:
 
         /** Initialise hardware RTC inside a mutex so that this
@@ -83,4 +91,9 @@ class TP_Sleep_Manager
          *                timer should generate an alarm
          */
         void rtc_set_wake_up_timer_s(uint32_t seconds);
+
+        /** Configuration for stop mode all GPIO pins excepts those some to Hi-Z 
+         *  to minimise leakage current.
+         */
+        void configure(bool wkup_one); 
 };
