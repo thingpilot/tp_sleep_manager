@@ -185,11 +185,10 @@ void TP_Sleep_Manager::standby(int seconds, bool wkup_one)
 void TP_Sleep_Manager::configure(bool wkup_one)
 {
     HAL_Init();
-    
     __HAL_RCC_PWR_CLK_ENABLE();
     HAL_PWREx_EnableUltraLowPower();
     HAL_PWREx_EnableFastWakeUp();
-    HAL_SuspendTick();
+    HAL_SuspendTick(); //todo check if this makes a diff
     /* GPIO Ports Clock Enable */
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -218,24 +217,24 @@ void TP_Sleep_Manager::configure(bool wkup_one)
     GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_8| GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12| GPIO_PIN_14 | GPIO_PIN_15;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    if(wkup_one) 
-    {
-        /* Default input settings */
-        GPIO_InitStruct.Pin   = GPIO_PIN_0;
-        GPIO_InitStruct.Mode  = GPIO_MODE_IT_RISING;
-        GPIO_InitStruct.Pull  = GPIO_NOPULL;
-        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET ); 
-        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);  
+    // if(wkup_one) 
+    // {
+    //     /* Default input settings */
+    //     GPIO_InitStruct.Pin   = GPIO_PIN_0;
+    //     GPIO_InitStruct.Mode  = GPIO_MODE_IT_RISING;
+    //     GPIO_InitStruct.Pull  = GPIO_NOPULL;
+    //     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET ); 
+    //     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);  
 
-        /* Configure PA0 as External Interrupt */
-        GPIOA->MODER &= ~( GPIO_MODER_MODE0 ); // PA0 is in Input mode
-        EXTI->IMR |= EXTI_IMR_IM0; // interrupt request from line 0 not masked EXTI4_15_IRQn
-        EXTI->RTSR |= EXTI_RTSR_TR0; // rising trigger enabled for input line 0
+    //     /* Configure PA0 as External Interrupt */
+    //     GPIOA->MODER &= ~( GPIO_MODER_MODE0 ); // PA0 is in Input mode
+    //     EXTI->IMR |= EXTI_IMR_IM0; // interrupt request from line 0 not masked EXTI4_15_IRQn
+    //     EXTI->RTSR |= EXTI_RTSR_TR0; // rising trigger enabled for input line 0
             
-        __HAL_GPIO_EXTI_CLEAR_IT ( GPIO_PIN_0 );
-        HAL_NVIC_SetPriority     ( EXTI0_1_IRQn, 0, 0); //set priority to zero
-        HAL_NVIC_EnableIRQ       ( EXTI0_1_IRQn ); 
-    }
+    //     __HAL_GPIO_EXTI_CLEAR_IT ( GPIO_PIN_0 );
+    //     HAL_NVIC_SetPriority     ( EXTI0_1_IRQn, 0, 0); //set priority to zero
+    //     HAL_NVIC_EnableIRQ       ( EXTI0_1_IRQn ); 
+    // }
     __HAL_RCC_GPIOA_CLK_DISABLE();
     __HAL_RCC_GPIOB_CLK_DISABLE();
     __HAL_RCC_GPIOC_CLK_DISABLE();
@@ -256,8 +255,6 @@ void TP_Sleep_Manager::stop(int seconds, bool wkup_one)
     clear_uc_wakeup_flags();
     rtc_set_wake_up_timer_s(seconds);
 
-    HAL_SuspendTick();
-
     if(wkup_one) 
     {
         HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
@@ -269,13 +266,14 @@ void TP_Sleep_Manager::stop(int seconds, bool wkup_one)
 
     // Enter STOP mode
     EXTI->PR = 0xFFFFFFFF;
+    HAL_SuspendTick();
 
-    HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI | PWR_STOPENTRY_WFE);
+    HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI | PWR_STOPENTRY_WFE); //| PWR_STOPENTRY_WFE
     /*After exciting stop mode operations */
     HAL_Init();
     HAL_ResumeTick();
     HAL_PWREx_DisableUltraLowPower();
-   
+
     /* GPIO Ports Clock Enable */
     __HAL_RCC_GPIOA_CLK_ENABLE();
     
@@ -287,7 +285,7 @@ void TP_Sleep_Manager::stop(int seconds, bool wkup_one)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, GPIO_PIN_SET); //tcxo
-    //HAL_Delay(5); //May needed
+    HAL_Delay(5); //May needed
 
    __HAL_RCC_GPIOA_CLK_DISABLE();
     
